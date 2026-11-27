@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confirm your email</title>
+  <style>
+    body { background-color:#f4f6f8; font-family:Helvetica, Arial, sans-serif; margin:0; padding:20px; }
+    .container { max-width:600px; margin:0 auto; background:#fff; border-radius:8px; padding:28px; }
+    h1 { font-size:20px; color:#0f172a; }
+    p { font-size:15px; color:#374151; line-height:1.45; }
+    .btn { display:inline-block; padding:12px 20px; background:#fdc700; color:#364153; border-radius:8px; font-weight:600; }
+    .muted { color:#9ca3af; font-size:13px; word-break:break-all; }
+    .footer { font-size:13px; color:#6b7280; margin-top:24px; padding-top:16px; border-top:1px solid #e5e7eb; text-align:left; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Confirm your email</h1>
+    <p>Thanks for signing up! Click the button below to confirm your email address and finish setting up your account.</p>
+    <p><a href="{{ .ConfirmationURL }}" class="btn">Confirm your email</a></p>
+    <div class="footer">
+      <p>Sent by <strong>AeroAid</strong></p>
+      <p>123 Your Street, City, Country</p>
+      <p>Need help? <a href="mailto:support@example.com">Contact us</a></p>
+    </div>
+  </div>
+</body>
+</html>
