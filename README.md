@@ -45,164 +45,52 @@ The platform facilitates quick and efficient blood donor searches, helping save 
 
 ## 🛠️ Tech Stack
 
-### **Frontend**
-
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **React Hook Form** - Form management
-- **Zustand** - State management
-- **Lucide React** - Icon library
-
-### **Backend & Database**
-
-- **Supabase** - Backend-as-a-Service
-- **PostgreSQL** - Database
-- **Row Level Security** - Data protection
-- **Real-time subscriptions** - Live updates
-
-### **Additional Tools**
-
-- **TanStack Query** - Data fetching and caching
-- **Zod** - Schema validation
-- **Image Compression** - Optimized file uploads
-- **Upstash Redis** - Caching layer
+- **[Nuxt 4](https://nuxt.com)** (Vue 3, TypeScript): pages, layouts and components are Vue single-file components
+- **[Supabase](https://supabase.com)** via [`@nuxtjs/supabase`](https://supabase.nuxtjs.org): auth (email codes), Postgres with row-level security, storage for avatars
+- **Tailwind CSS v4**: dark-only theme with design tokens in `app/assets/css/main.css`
+- **anime.js**: animated logo · **Zod**: form validation
+- **Vercel**: hosting (Nuxt is auto-detected)
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
-- Supabase account
+- Node.js 20+ and npm
+- Access to the Supabase project
 
-### Installation
+### Setup
 
-1. **Clone the repository**
+```bash
+git clone https://github.com/YouthNotion/AeroAid.git
+cd AeroAid
+npm install
+cp .env.example .env   # then fill in SUPABASE_URL and SUPABASE_KEY
+npm run dev            # http://localhost:3000
+```
 
-   ```bash
-   git clone https://github.com/your-username/aeroaid.git
-   cd aeroaid
-   ```
+`SUPABASE_KEY` is the project's anon/publishable key (Project Settings → API). On Vercel, set the same two variables in the project's environment settings.
 
-2. **Install dependencies**
+### Database
 
-   ```bash
-   pnpm install
-   # or
-   npm install
-   ```
+Schema changes live in `supabase/migrations/` and are applied to the hosted project (SQL Editor or `supabase db push`). `supabase/schema.sql` is a reconstructed reference of the original tables. Regenerate `app/types/database.types.ts` after schema changes (`supabase gen types typescript --linked`).
 
-3. **Environment Setup**
-   Create a `.env.local` file in the root directory:
-
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   UPSTASH_REDIS_REST_URL=your_redis_url
-   UPSTASH_REDIS_REST_TOKEN=your_redis_token
-   ```
-
-4. **Database Setup**
-   - Set up your Supabase project
-   - Run the provided SQL migrations
-   - Configure Row Level Security policies
-
-5. **Run the development server**
-
-   ```bash
-   pnpm dev
-   # or
-   npm run dev
-   ```
-
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+Auth email templates (code-based sign-up, password reset, email change) are in `supabase/templates/`.
 
 ## 📁 Project Structure
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── (auth-pages)/      # Authentication pages
-│   ├── (protected-pages)/ # Protected user areas
-│   ├── api/               # API routes
-│   └── search/            # Donor search functionality
-├── components/            # Reusable UI components
-├── hooks/                 # Custom React hooks
-├── lib/                   # Utilities and configurations
-│   ├── supabase/         # Database queries and client
-│   ├── stores/           # State management
-│   └── utils/            # Helper functions
-├── types/                 # TypeScript type definitions
-└── data/                  # Static data and constants
+app/
+├── pages/          # routes (search, login, signup, verify, profile, requests, …)
+├── components/     # UI components (DonorCard, PhoneInput, OtpInput, AvatarCropper, …)
+├── layouts/        # default + landing layouts
+├── composables/    # useMyProfile, useToast
+├── utils/options.ts# blood groups and areas
+├── types/          # generated Supabase database types
+└── assets/css/     # Tailwind theme
+public/             # logo, icons, fonts, images
+supabase/           # migrations, email templates, schema reference
+docs/FEATURES.md    # feature inventory from v1
 ```
-
-## 🧩 Component Architecture
-
-### **Core Components**
-
-#### **🏠 Layout & Navigation**
-
-- **`Navbar.tsx`** - Main navigation bar with blood group search functionality and user menu
-- **`MenuDropdown.tsx`** - User menu dropdown with authentication status and navigation links
-
-#### **👤 User Interface Components**
-
-- **`DonorCard.tsx`** - Displays donor information cards with profile picture, blood group, location, and availability status
-- **`RequestCard.tsx`** - Shows blood donation requests with patient details, hospital info, and donor information
-- **`HistoryCard.tsx`** - Displays donation history records with patient and hospital details
-
-#### **📝 Form Components**
-
-- **`InputField.tsx`** - Reusable input field component with validation styling
-- **`SelectField.tsx`** - Dropdown selection component for blood groups and other options
-- **`AreaDropdown.tsx`** - Specialized dropdown for geographical area selection
-- **`ImageUpload.tsx`** - Profile picture upload component with image compression and preview
-
-#### **🔐 Authentication Components**
-
-- **`auth/login-form.tsx`** - User login form with email/password authentication
-- **`auth/register-form.tsx`** - User registration form with profile setup
-- **`auth/password-reset-form.tsx`** - Password reset functionality
-
-#### **🎨 UI Enhancement Components**
-
-- **`HighlightedText.tsx`** - Text highlighting component for search results
-- **`LoadingSpinner.tsx`** - Loading animation component
-- **`MechanicalDate.tsx`** - Stylized date display component
-- **`MechanicalFont.tsx`** - Custom font styling component
-
-#### **📦 UI Library Components (`ui/` directory)**
-
-- **`button.tsx`** - Reusable button component with variants
-- **`card.tsx`** - Card layout components for content organization
-- **`dropdown-menu.tsx`** - Advanced dropdown menu functionality
-- **`input.tsx`** - Base input component
-- **`label.tsx`** - Form label component
-- **`toast.tsx`** - Notification toast component
-- **`toaster.tsx`** - Toast notification manager
-
-### **Component Responsibilities**
-
-#### **Data Display**
-
-- `DonorCard` - Shows donor profiles in search results
-- `RequestCard` - Displays active blood requests
-- `HistoryCard` - Shows past donation records
-
-#### **User Interaction**
-
-- `Navbar` - Primary navigation and search interface
-- `MenuDropdown` - User account management
-- Form components - Data input and validation
-
-#### **Authentication Flow**
-
-- Login/Register forms handle user authentication
-- Protected route components ensure security
-- Profile management through various form components
 
 ## 🔐 Authentication & Security
 
@@ -248,15 +136,12 @@ We welcome contributions from the aviation community! Please follow these steps:
 ## 📋 Development Scripts
 
 ```bash
-# Development
-pnpm dev          # Start development server
-pnpm build        # Build for production
-pnpm start        # Start production server
-pnpm lint         # Run ESLint
-
-# Database
-pnpm db:generate  # Generate database types
-pnpm db:push      # Push schema changes
+npm run dev           # dev server with hot reload
+npm run build         # production build
+npm run preview       # preview the production build
+npm run typecheck     # vue-tsc type checking
+npm run format        # format with Prettier
+npm run format:check  # check formatting
 ```
 
 ## 🐛 Known Issues & Roadmap
@@ -264,7 +149,7 @@ pnpm db:push      # Push schema changes
 ### Current Issues
 
 - Mobile optimization for team section
-- Avatar placeholder images need updating
+- Search and landing counts load all profiles at once (fine now; paginate past ~1,000 donors)
 
 ### Upcoming Features
 
