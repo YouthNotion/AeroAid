@@ -37,10 +37,10 @@ useHead({ title: () => profile.value?.full_name || "Donor" });
 const age = computed(() => {
   const dob = profile.value?.date_of_birth;
   if (!dob) return null;
-  const d = new Date(dob);
+  const [y, m, d] = dob.split("-").map(Number); // calendar date, no time zone
   const now = new Date();
-  let a = now.getFullYear() - d.getFullYear();
-  if (now < new Date(now.getFullYear(), d.getMonth(), d.getDate())) a--;
+  let a = now.getFullYear() - y!;
+  if (now < new Date(now.getFullYear(), m! - 1, d!)) a--;
   return a;
 });
 </script>

@@ -31,9 +31,14 @@ const {
 const daysSinceLast = computed(() => {
   const last = history.value.find((h) => h.date)?.date;
   if (!last) return null;
+  // Compare calendar dates (local today vs the stored date) so the count
+  // changes at local midnight, not at UTC midnight.
+  const [y, m, d] = last.split("-").map(Number);
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   return Math.max(
     0,
-    Math.floor((Date.now() - new Date(last).getTime()) / 86_400_000),
+    Math.round((today - Date.UTC(y!, m! - 1, d!)) / 86_400_000),
   );
 });
 
