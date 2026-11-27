@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import type { Profile } from "~/types/database.types";
 
-defineProps<{ donor: Profile; canRequest: boolean }>();
-const emit = defineEmits<{ request: [Profile] }>();
+/** What anyone (even logged out) may read; contact, DOB and bio need a login. */
+export type PublicDonor = Pick<
+  Profile,
+  | "id"
+  | "full_name"
+  | "blood_group"
+  | "area_name"
+  | "avatar_url"
+  | "is_available"
+  | "organization"
+  | "updated_at"
+>;
+
+defineProps<{ donor: PublicDonor; canRequest: boolean }>();
+const emit = defineEmits<{ request: [PublicDonor] }>();
 </script>
 
 <template>
