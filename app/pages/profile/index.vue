@@ -17,9 +17,13 @@ const form = reactive({
   is_available: true,
 });
 
+// Fill the form when the profile first loads (or the account changes), not on
+// every refresh: a photo upload refreshes the profile and must not wipe
+// edits the user hasn't saved yet.
 watch(
-  profile,
-  (p) => {
+  () => profile.value?.id,
+  () => {
+    const p = profile.value;
     if (!p) return;
     Object.assign(form, {
       full_name: p.full_name ?? "",
