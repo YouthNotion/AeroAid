@@ -30,10 +30,12 @@ const statusStyle: Record<string, string> = {
 
 function fmt(d: string | null) {
   if (!d) return "—";
+  // 'YYYY-MM-DD' is a calendar date: format it in UTC so no time zone shifts it.
   return new Date(d).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
+    timeZone: "UTC",
   });
 }
 </script>

@@ -27,7 +27,8 @@ const form = reactive<DonationFormData>({
   patient_name: "",
   hospital: "",
   location: "",
-  date: new Date().toISOString().slice(0, 10),
+  // Local date (toISOString would give the UTC date: yesterday before 6am in Dhaka).
+  date: new Date().toLocaleDateString("en-CA"),
   reference: "",
   ...props.initial,
 });
