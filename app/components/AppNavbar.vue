@@ -71,7 +71,9 @@ onBeforeUnmount(() => {
 });
 
 async function signOut() {
-  await supabase.auth.signOut();
+  // Just this device; "Sign out everywhere" on /account uses scope "global"
+  // (supabase-js defaults to global).
+  await supabase.auth.signOut({ scope: "local" });
   clearNuxtData("my-profile");
   await navigateTo("/login");
 }

@@ -11,7 +11,12 @@ const password = ref("");
 const busy = ref(false);
 const error = ref("");
 
+// Navigate exactly once. Both submit() and the user watcher fire after login;
+// pluck() clears the saved redirect, so a second call would fall back to /search.
+let leaving = false;
 function goNext() {
+  if (leaving) return;
+  leaving = true;
   return navigateTo(redirectInfo.pluck() || "/search", { replace: true });
 }
 
@@ -70,7 +75,6 @@ async function submit() {
           autocomplete="current-password"
           class="field mt-1"
           required
-          minlength="8"
         />
       </label>
       <p
