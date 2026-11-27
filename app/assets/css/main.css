@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Digital7";
+  src: url("/fonts/digital-7-mono.ttf") format("truetype");
+  font-display: swap;
+}
+
+/*
+ * AeroAid is dark-only: jet-black canvas, blood-red accent. There is no light mode.
+ * Use these tokens (bg-bg, bg-surface, text-muted, text-blood-text, border-line, ...)
+ * instead of raw neutral/red shades so the palette stays consistent.
+ */
+@theme {
+  --font-digital: "Digital7", ui-monospace, monospace;
+
+  /* Surfaces, darkest to lightest */
+  --color-bg: #000000;
+  --color-surface: #0a0a0a;
+  --color-surface-2: #111111;
+  --color-raised: #1a1a1a;
+
+  /* Lines */
+  --color-line: #222222;
+  --color-line-strong: #3a3a3a;
+
+  /* Text */
+  --color-fg: #f2f2f2;
+  --color-soft: #cfcfcf;
+  --color-muted: #9a9a9a;
+  --color-subtle: #6b6b6b;
+
+  /* Blood red */
+  --color-blood: #d40001; /* fills: buttons, badges, logo */
+  --color-blood-hover: #a8000a;
+  --color-blood-text: #ff4646; /* red text on black (AA contrast) */
+  --color-blood-dim: #1f0204; /* tinted backgrounds */
+  --color-blood-line: #5a0a10; /* tinted borders */
+}
+
+@layer base {
+  html {
+    color-scheme: dark; /* native date pickers, selects, scrollbars */
+    background: var(--color-bg);
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-bg text-fg antialiased;
+  }
+  ::selection {
+    @apply bg-blood text-white;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-subtle;
+  }
+  select option {
+    @apply bg-surface-2 text-fg;
+  }
+}
+
+@utility label-caps {
+  @apply text-xs font-semibold tracking-widest text-muted uppercase;
+}
+@utility field {
+  @apply w-full rounded-lg border border-line-strong bg-surface-2 px-3 py-2.5 text-base text-fg outline-none transition focus:border-blood focus:ring-2 focus:ring-blood/30 disabled:opacity-60;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold tracking-wide transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-blood text-white hover:bg-blood-hover;
+}
+@utility btn-dark {
+  @apply btn border border-line-strong bg-raised text-fg hover:border-blood-line hover:bg-surface-2;
+}
+@utility btn-ghost {
+  @apply btn border border-line-strong bg-transparent text-soft hover:border-blood-line hover:bg-blood-dim hover:text-fg;
+}
+@utility card {
+  @apply overflow-hidden rounded-xl border border-line bg-surface;
+}

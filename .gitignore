@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# build output
+dist/
+build/
+out/
+.next/
+.svelte-kit/
+.nuxt/
+.output/
+*.tsbuildinfo
+
+# env files — never commit credentials
+.env
+.env.*
+!.env.example
+
+# misc
+.DS_Store
+*.pem
+*.log
+.vercel

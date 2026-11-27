@@ -1,0 +1,7 @@
+{
+  "mailer_subjects_confirmation": "Confirm Your Signup",
+  "mailer_subjects_recovery": "Reset Your Password",
+  "mailer_otp_exp": 86400,
+  "password_min_length": 6,
+  "mailer_subjects_email_change": "Confirm Email Change"
+}
