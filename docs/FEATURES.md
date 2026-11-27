@@ -11,7 +11,7 @@ AeroAid is a blood donor network for Bangladesh's aviation community (students a
   - `pending`: a **request** from `requester_id` to `donor_id`.
   - `completed`: a **history entry** that the donor logged themselves.
 
-The data model is in [supabase/schema.sql](../supabase/schema.sql) and [supabase/database.types.ts](../supabase/database.types.ts). The dropdown data is in [src/data/dropdown.ts](../src/data/dropdown.ts).
+The data model is in [supabase/schema.sql](../supabase/schema.sql) and [supabase/database.types.ts](../supabase/database.types.ts). The dropdown data is in [app/utils/options.ts](../app/utils/options.ts).
 
 ## Features
 

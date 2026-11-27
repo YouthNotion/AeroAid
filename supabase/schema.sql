@@ -19,7 +19,7 @@ create table public.profiles (
   full_name     text,
   date_of_birth date,                     -- INFERRED type (types say string)
   blood_group   public.blood_group_type,
-  area_name     text not null,            -- one of src/data/dropdown.ts `areas`
+  area_name     text not null,            -- one of app/utils/options.ts `areas`
   contact       text,                     -- phone; shown to requesters
   organization  text,                     -- airline / training institute
   bio           text,
