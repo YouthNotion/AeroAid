@@ -24,12 +24,11 @@ const {
 const { data: donationCount } = await useAsyncData(
   () => `donation-count-${id.value}`,
   async () => {
-    const { count } = await supabase
-      .from("donations")
-      .select("id", { count: "exact", head: true })
-      .eq("donor_id", id.value)
-      .eq("status", "completed");
-    return count ?? 0;
+    // Donation rows are private to donor/requester; this returns only the count.
+    const { data } = await supabase.rpc("completed_donation_count", {
+      p_donor: id.value,
+    });
+    return data ?? 0;
   },
 );
 

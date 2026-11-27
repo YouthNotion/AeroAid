@@ -122,7 +122,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      completed_donation_count: {
+        Args: { p_donor: string };
+        Returns: number;
+      };
     };
     Enums: {
       blood_group_type: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";

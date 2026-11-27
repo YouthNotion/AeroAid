@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Profile } from "~/types/database.types";
+import type { PublicDonor } from "~/components/DonorCard.vue";
 import type { DonationFormData } from "~/components/DonationForm.vue";
 
 useHead({ title: "Find donors" });
@@ -50,9 +50,12 @@ const {
         .filter((id): id is string => !!id);
     }
 
+    // Only the public columns: logged-out visitors can't read contact/DOB/bio.
     let q = supabase
       .from("profiles")
-      .select("*")
+      .select(
+        "id, full_name, blood_group, area_name, avatar_url, is_available, organization, updated_at",
+      )
       .order("is_available", { ascending: false })
       .order("full_name");
     if (bloodGroup.value)
@@ -68,7 +71,7 @@ const {
   },
   {
     watch: [bloodGroup, area, availableOnly, () => user.value?.sub],
-    default: () => [] as Profile[],
+    default: () => [] as PublicDonor[],
   },
 );
 
@@ -86,7 +89,7 @@ const summary = computed(() => {
 });
 
 // Request flow
-const target = ref<Profile | null>(null);
+const target = ref<PublicDonor | null>(null);
 const sending = ref(false);
 
 async function sendRequest(form: DonationFormData) {
