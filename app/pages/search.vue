@@ -40,11 +40,12 @@ const {
     // Hide donors the current user already has a pending request with.
     let pendingIds: string[] = [];
     if (uid) {
-      const { data } = await supabase
+      const { data, error: pendingErr } = await supabase
         .from("donations")
         .select("donor_id")
         .eq("requester_id", uid)
         .eq("status", "pending");
+      if (pendingErr) throw pendingErr;
       pendingIds = (data ?? [])
         .map((d) => d.donor_id)
         .filter((id): id is string => !!id);
@@ -93,10 +94,12 @@ const target = ref<PublicDonor | null>(null);
 const sending = ref(false);
 
 async function sendRequest(form: DonationFormData) {
-  if (!target.value || !user.value) return;
+  // Capture the donor now: the modal can be closed while the insert is running.
+  const donor = target.value;
+  if (!donor || !user.value) return;
   sending.value = true;
   const { error: err } = await supabase.from("donations").insert({
-    donor_id: target.value.id,
+    donor_id: donor.id,
     requester_id: user.value.sub,
     status: "pending",
     patient_name: form.patient_name,
@@ -110,7 +113,7 @@ async function sendRequest(form: DonationFormData) {
     toast.error(`Couldn't send the request: ${err.message}`);
     return;
   }
-  toast.success(`Request sent to ${target.value.full_name ?? "the donor"}.`);
+  toast.success(`Request sent to ${donor.full_name ?? "the donor"}.`);
   target.value = null;
   refreshNuxtData("sent-requests");
   await refresh();
