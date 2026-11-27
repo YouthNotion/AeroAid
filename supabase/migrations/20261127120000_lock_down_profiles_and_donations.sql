@@ -10,8 +10,10 @@
 --     availability, organization) but NOT contact, date of birth or bio.
 --   * Logged-in members see full profiles (needed to contact a donor).
 --   * Donations are visible only to the donor and the requester.
---   * Requests can only be sent as yourself; donations can only be logged for yourself.
---   * Donors can mark a pending request donated/declined; requesters can cancel it.
+--   * Requests can only be sent as yourself, to a donor who is available, and
+--     only one open request per donor; donations can only be logged for yourself.
+--   * Donors can mark a pending request donated/declined (status only);
+--     requesters can cancel it.
 --   * Public donation counts come from a function that returns only a number.
 
 begin;
@@ -38,12 +40,27 @@ create policy "Donor and requester can read their donations"
 create policy "Send requests as yourself, log your own donations"
   on public.donations for insert to authenticated
   with check (
-    -- a request: from me, to someone else, pending
-    (requester_id = (select auth.uid()) and donor_id <> (select auth.uid()) and status = 'pending')
+    -- a request: from me, to someone else, pending, to an available donor,
+    -- and not while I already have an open request with them
+    (
+      requester_id = (select auth.uid())
+      and donor_id <> (select auth.uid())
+      and status = 'pending'
+      and exists (select 1 from public.profiles p where p.id = donations.donor_id and p.is_available)
+      and not exists (
+        select 1 from public.donations d
+        where d.requester_id = (select auth.uid()) and d.donor_id = donations.donor_id and d.status = 'pending'
+      )
+    )
     or
     -- a self-logged donation in my history
     (donor_id = (select auth.uid()) and requester_id is null and status = 'completed')
   );
+
+-- Updates may only touch the status column, so answering a request can't
+-- rewrite who asked, the patient, the hospital or the date.
+revoke update on public.donations from authenticated;
+grant update (status) on public.donations to authenticated;
 
 create policy "Donor can answer a pending request"
   on public.donations for update to authenticated
