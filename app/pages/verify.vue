@@ -14,7 +14,15 @@ const verifying = ref(false);
 const error = ref("");
 const otp = ref<{ clear: () => void }>();
 
-watch(user, (u) => u && navigateTo("/profile", { replace: true }));
+const redirectInfo = useSupabaseCookieRedirect();
+// Navigate once: verifyOtp signs the user in, which also fires the user watcher.
+let leaving = false;
+function goNext() {
+  if (leaving) return;
+  leaving = true;
+  return navigateTo(redirectInfo.pluck() || "/profile", { replace: true });
+}
+watch(user, (u) => u && goNext());
 
 async function verify(token: string) {
   if (!email.value) {
@@ -37,7 +45,7 @@ async function verify(token: string) {
     return;
   }
   toast.success("Email confirmed. Welcome to AeroAid!");
-  await navigateTo("/profile", { replace: true });
+  await goNext();
 }
 
 // Resend with a cooldown (Supabase also limits how often emails can go out).
